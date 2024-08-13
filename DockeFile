@@ -1,0 +1,27 @@
+# Obtener la última imagen de Node en Alpine Linux
+FROM node:18-alpine as builder 
+
+# Configurar el directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias
+COPY ./swa.frontend/package*.json ./
+RUN npm install
+
+# Copiar todos los archivos de nuestro proyecto
+COPY ./swa.frontend/ .
+
+# Construir la aplicación
+RUN npm run build 
+
+# Etapa 2: Servir la aplicación utilizando un servidor HTTP
+FROM nginx:alpine
+
+# Copiar los archivos construidos desde la etapa anterior
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Exponer el puerto 80
+EXPOSE 80
+
+# Comando para iniciar Nginx
+CMD ["nginx", "-g", "daemon off;"]
