@@ -5,11 +5,11 @@ FROM node:18-alpine as builder
 WORKDIR /app
 
 # Instalar dependencias
-COPY ./swa.frontend/package*.json ./
+COPY ./package*.json ./
 RUN npm install
 
 # Copiar todos los archivos de nuestro proyecto
-COPY ./swa.frontend/ .
+COPY . .
 
 # Construir la aplicación
 RUN npm run build 
